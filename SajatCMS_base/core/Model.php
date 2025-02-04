@@ -68,4 +68,22 @@ abstract class Model
             throw new Exception("A modulokat tartalmazó JSON feldolgozása meghiúsult!");
         }
     }
+
+        public static function GetPageDataDB(string $page) : array
+    {
+        try {
+              $result = DBHandler::RunQuery("SELECT * FROM `pages` WHERE `pageKey` = ?", [new DBParam(DBTypes::String, $page)]);
+              if($result->num_rows > 0)
+              {
+                  return $result->fetch_assoc();
+                  //return $result->fetch_all(MYSQLI_ASSOC);
+              }
+              else
+              {
+                  throw new NotFoundException("A megadott oldal nem található!");
+              }
+        } catch (Exception $e) {
+             throw new DBException("Az oldal lekérdezése során hiba történt!", 0, $e);
+        }
+    }
 }
